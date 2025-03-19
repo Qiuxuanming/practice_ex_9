@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class HandleOrders {
@@ -10,6 +11,7 @@ public class HandleOrders {
     private String[] drinksOrdered = new String[20];
     private double totalOrderPrice = 0.0;
     private int numberOfPizzasOrdered = 0;
+    private ArrayList<CustomPizza> customPizzas = new ArrayList<>();
     StringBuilder pizzaOrderSummary = new StringBuilder();
 
     Scanner input = new Scanner(System.in);
@@ -34,7 +36,6 @@ public class HandleOrders {
             int choice = input.nextInt();
             input.nextLine();
             
-
             if(choice>0 && choice<6){
                 switch(choice){
                     case 1:
@@ -88,6 +89,7 @@ public class HandleOrders {
                 System.out.println("Please enter a maximum of 10 topping choices.\n");
 
                 StringBuilder customPizza = new StringBuilder(" Custom Pizza with ");
+                StringBuilder customPizzaToppings = new StringBuilder();
                 
                 int l = 1;
                 do{
@@ -98,6 +100,7 @@ public class HandleOrders {
                         break;
                     }
                     customPizza.append(PizzaToppings.values()[toppingChoice-1].getTopping() + ", ");
+                    customPizzaToppings.append(PizzaToppings.values()[toppingChoice-1].getTopping() + ", ");
                     customPizzaPrice += PizzaToppings.values()[toppingChoice-1].getToppingPrice();
                     l++;
                 }while(l!=10 || l!=0);
@@ -111,7 +114,9 @@ public class HandleOrders {
                 numberOfPizzasOrdered++;
                 j++;
 
-
+                // 创建 CustomPizza 对象并添加到 customPizzas ArrayList
+                CustomPizza customPizzaObj = new CustomPizza(customPizzaToppings.toString(), customPizzaPrice);
+                customPizzas.add(customPizzaObj);
             }
 
             i = 1;
@@ -164,8 +169,6 @@ public class HandleOrders {
             
 
         }while(orderAnother.equalsIgnoreCase("Y"));
-
-
     }
 
     public void createOrderSummary(){
@@ -177,17 +180,20 @@ public class HandleOrders {
             pizzaOrderSummary.append(pizzaSizesOrdered[i] + "\n");
             pizzaOrderSummary.append(sideDishesOrdered[i] + "\n");
             pizzaOrderSummary.append(drinksOrdered[i] + "\n \n");
-            
         }
 
         pizzaOrderSummary.append("ORDER TOTAL: €" + totalOrderPrice + "\n");
+    }
 
+    public void displayCustomPizzas() {
+        System.out.println("Custom Pizzas Ordered:");
+        for (CustomPizza customPizza : customPizzas) {
+            System.out.println(customPizza);
+        }
     }
 
     @Override
     public String toString(){
-        
         return pizzaOrderSummary.toString();
     }
-    
 }
